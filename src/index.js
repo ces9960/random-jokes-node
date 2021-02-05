@@ -41,6 +41,7 @@ const errorPage = `
     <body>
         <h1>404 - File Not Found!</h1>
         <p>Check your URL, or your typing!!</p>
+        <p>Perhaps you are looking for <a href="/random-joke">/random-joke</a> ?</p>
         <p>:-O</p>
     </body>
 </html>`;
