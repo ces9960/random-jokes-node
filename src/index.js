@@ -74,7 +74,7 @@ const onRequest = (request, response) => {
     //console.log("pathname=", pathname);
 
     //const params = query.parse(parsedUrl.query);
-    const max = 1;
+    const max = 10;
     //console.log("params=", params);
     //console.log("max=", max);
    
