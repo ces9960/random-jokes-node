@@ -1,11 +1,4 @@
 
-const htmlHandler = require('./htmlResponses.js');
-const jsonHandler = require('./jsonResponses.js');
-
-const urlStruct = {
-  '/random-joke' : jsonHandler.getRandomJokeResponse,
-  notFound : htmlHandler.get404Response,
-};
 
 // console.log("First web service starting up ...");
 
@@ -17,6 +10,15 @@ const url = require('url');
 
 // 3 - locally this will be 3000, on Heroku it will be assigned
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
+
+
+const htmlHandler = require('./htmlResponses.js');
+const jsonHandler = require('./jsonResponses.js');
+
+const urlStruct = {
+  '/random-joke' : jsonHandler.getRandomJokeResponse,
+  notFound : htmlHandler.get404Response,
+};
 
 // 4 - here's our index page
 
