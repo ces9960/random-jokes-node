@@ -1,5 +1,3 @@
-
-
 // console.log("First web service starting up ...");
 
 // 1 - pull in the HTTP server module
@@ -13,14 +11,13 @@ const query = require('querystring');
 // 3 - locally this will be 3000, on Heroku it will be assigned
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
-
 const htmlHandler = require('./htmlResponses.js');
 const jsonHandler = require('./jsonResponses.js');
 
 const urlStruct = {
-  '/random-joke' : jsonHandler.getRandomJokeResponse,
+  '/random-joke': jsonHandler.getRandomJokeResponse,
   '/random-jokes': jsonHandler.getRandomJokesResponse,
-  notFound : htmlHandler.get404Response,
+  notFound: htmlHandler.get404Response,
 };
 
 // 4 - here's our index page
@@ -29,7 +26,6 @@ const urlStruct = {
 
 // 6 - this will return a random number no bigger than `max`, as a string
 // we will also doing our query parameter validation here
-
 
 // 7 - this is the function that will be called every time a client request comes in
 // this time we will look at the `pathname`, and send back the appropriate page
@@ -46,12 +42,12 @@ const onRequest = (request, response) => {
   // console.log("max=", max);
 
   const params = query.parse(parsedUrl.query);
-  const {limit} = params;
+  // const { limit } = params;
 
-  if(urlStruct[pathname]){
-    urlStruct[pathname](request,response,params);
-  }else{
-    urlStruct.notFound(request,response);
+  if (urlStruct[pathname]) {
+    urlStruct[pathname](request, response, params);
+  } else {
+    urlStruct.notFound(request, response);
   }
 };
 
