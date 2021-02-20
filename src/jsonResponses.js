@@ -16,8 +16,49 @@ const jokes = [
     { q: 'What did the ocean say to the sailboat?', a: 'Nothing, it just waved.' },
     { q: 'What do you get when you cross a snowman with a vampire?', a: 'Frostbite' },
   ];
+  const getRandomJokes = (limit) => {
+    let jokeCount;//how many jokes to print
+    let usedJokes = [];//keeps track of which jokes are used
+    let jokesToReturn = [];
+    //always print at least 1 joke
+    if(limit < 1){
+      jokeCount = 1;
+    }
+  //never print more jokes than there are in the array
+    else if(limit > jokes.length){
+      jokeCount = jokes.length;
+    }
+  //if the limit is within range, print that many jokes
+    else{
+      jokeCount = limit;
+    }
+    
+    //generates random numbers without duplicates
+    while(usedJokes.length < jokeCount){
+      let jokeNumber = Math.floor(Math.random() * jokes.length);
+      if(!(usedJokes.includes(jokeNumber))){
+        usedJokes.push(jokeNumber);
+      }
+    }
 
+    for(let i = 0; i < jokeCount; i++){
+      let jokeNumber = usedJokes[i];
+      let responseObj = {
+        question: jokes[jokeNumber].q,
+        answer: jokes[jokeNumber].a,
+      };
+      
+      jokesToReturn.push(responseObj);
+    }
+      return JSON.stringify(jokesToReturn);
+  }
   
+  const getRandomJokesResponse = (request,response,params) => {
+    response.writeHead(200,{'Content-Type':'application/json'});
+    response.write(getRandomJokes(params.limit));
+    response.end();
+  };
+
   const getRandomJokeResponse = (request,response) => {
     const jokeNumber = Math.floor(Math.random() * jokes.length);
     const responseObj = {
@@ -33,3 +74,4 @@ const jokes = [
   };
 
   module.exports.getRandomJokeResponse = getRandomJokeResponse;
+  module.exports.getRandomJokesResponse = getRandomJokesResponse;
