@@ -12,11 +12,11 @@ const query = require('querystring');
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 const htmlHandler = require('./htmlResponses.js');
-const jsonHandler = require('./jsonResponses.js');
+const responseHandler = require('./responses.js');
 
 const urlStruct = {
-  '/random-joke': jsonHandler.getRandomJokeResponse,
-  '/random-jokes': jsonHandler.getRandomJokesResponse,
+  '/random-joke': responseHandler.getRandomJokeResponse,
+  '/random-jokes': responseHandler.getRandomJokesResponse,
   notFound: htmlHandler.get404Response,
 };
 
@@ -42,10 +42,12 @@ const onRequest = (request, response) => {
   // console.log("max=", max);
 
   const params = query.parse(parsedUrl.query);
+  let acceptedTypes = request.headers.accept && request.headers.accept.split(',');
+  acceptedTypes = acceptedTypes || [];
   // const { limit } = params;
 
   if (urlStruct[pathname]) {
-    urlStruct[pathname](request, response, params);
+    urlStruct[pathname](request, response, params, acceptedTypes);
   } else {
     urlStruct.notFound(request, response);
   }

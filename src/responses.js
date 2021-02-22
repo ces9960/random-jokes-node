@@ -50,23 +50,48 @@ const getRandomJokes = (limit) => {
   return JSON.stringify(jokesToReturn);
 };
 
-const getRandomJokesResponse = (request, response, params) => {
-  response.writeHead(200, { 'Content-Type': 'application/json' });
-  response.write(getRandomJokes(params.limit));
-  response.end();
+const getRandomJokesResponse = (request, response, params, acceptedTypes) => {
+  if (acceptedTypes.includes('text/xml')) {
+    const jokeArray = getRandomJokes(params.limit);
+    let responseXML = '<response>';
+    for (let i = 0; i < jokeArray.length; i += 1) {
+      responseXML += `
+      <question>${jokeArray[i].question}</question>
+      <answer>${jokeArray[i].answer}</answer>`;
+    }
+    responseXML += '</response>';
+    response.writeHead(200, { 'Content-Type': 'text/xml' });
+    response.write(responseXML);
+    response.end();
+  } else {
+    response.writeHead(200, { 'Content-Type': 'application/json' });
+    response.write(getRandomJokes(params.limit));
+    response.end();
+  }
 };
 
-const getRandomJokeResponse = (request, response) => {
+const getRandomJokeResponse = (request, response, params, acceptedTypes) => {
   const jokeNumber = Math.floor(Math.random() * jokes.length);
   const responseObj = {
     question: jokes[jokeNumber].q,
     answer: jokes[jokeNumber].a,
   };
-  const joke = JSON.stringify(responseObj);
-
-  response.writeHead(200, { 'Content-Type': 'application/json' });
-  response.write(joke);
-  response.end();
+  if (acceptedTypes.includes('text/xml')) {
+    const responseXML = `
+      <response>
+        <question>${responseObj.question}</question>
+        <answer>${responseObj.answer}</question>
+      </response>
+    `;
+    response.writeHead(200, { 'Content-Type': 'text/xml' });
+    response.write(responseXML);
+    response.end();
+  } else {
+    const joke = JSON.stringify(responseObj);
+    response.writeHead(200, { 'Content-Type': 'application/json' });
+    response.write(joke);
+    response.end();
+  }
 };
 
 module.exports.getRandomJokeResponse = getRandomJokeResponse;
