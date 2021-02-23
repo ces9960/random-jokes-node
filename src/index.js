@@ -17,6 +17,7 @@ const responseHandler = require('./responses.js');
 const urlStruct = {
   '/random-joke': responseHandler.getRandomJokeResponse,
   '/random-jokes': responseHandler.getRandomJokesResponse,
+  '/defaultStyles': htmlHandler.getCssResponse,
   notFound: htmlHandler.get404Response,
 };
 

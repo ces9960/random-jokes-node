@@ -68,16 +68,14 @@ const getRandomJokesResponse = (request, response, params, acceptedTypes, httpMe
       response.write(responseXML);
       response.end();
     }
-  } else{
-    if (httpMethod === 'HEAD') {
-      response.writeHead(200, { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(getRandomJokes(params.limit)) });
-      response.end();
-    } else {
-      response.writeHead(200, { 'Content-Type': 'application/json' });
-      response.write(getRandomJokes(params.limit));
-      response.end();
-    }
-  } 
+  } else if (httpMethod === 'HEAD') {
+    response.writeHead(200, { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(getRandomJokes(params.limit)) });
+    response.end();
+  } else {
+    response.writeHead(200, { 'Content-Type': 'application/json' });
+    response.write(getRandomJokes(params.limit));
+    response.end();
+  }
 };
 
 const getRandomJokeResponse = (request, response, params, acceptedTypes, httpMethod) => {
@@ -90,7 +88,7 @@ const getRandomJokeResponse = (request, response, params, acceptedTypes, httpMet
     const responseXML = `
       <response>
         <question>${responseObj.question}</question>
-        <answer>${responseObj.answer}</question>
+        <answer>${responseObj.answer}</answer>
       </response>
     `;
     if (httpMethod === 'HEAD') {
