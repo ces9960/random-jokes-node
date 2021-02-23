@@ -50,27 +50,37 @@ const getRandomJokes = (limit) => {
   return JSON.stringify(jokesToReturn);
 };
 
-const getRandomJokesResponse = (request, response, params, acceptedTypes) => {
+const getRandomJokesResponse = (request, response, params, acceptedTypes, httpMethod) => {
   if (acceptedTypes.includes('text/xml')) {
     const jokeArray = getRandomJokes(params.limit);
     let responseXML = '<response>';
     for (let i = 0; i < jokeArray.length; i += 1) {
       responseXML += `
-      <question>${jokeArray[i].question}</question>
-      <answer>${jokeArray[i].answer}</answer>`;
+        <question>${jokeArray[i].question}</question>
+        <answer>${jokeArray[i].answer}</answer>`;
     }
     responseXML += '</response>';
-    response.writeHead(200, { 'Content-Type': 'text/xml' });
-    response.write(responseXML);
-    response.end();
-  } else {
-    response.writeHead(200, { 'Content-Type': 'application/json' });
-    response.write(getRandomJokes(params.limit));
-    response.end();
-  }
+    if (httpMethod === 'HEAD') {
+      response.writeHead(200, { 'Content-Type': 'text/xml', 'Content-Length': Buffer.byteLength(responseXML) });
+      response.end();
+    } else {
+      response.writeHead(200, { 'Content-Type': 'text/xml' });
+      response.write(responseXML);
+      response.end();
+    }
+  } else{
+    if (httpMethod === 'HEAD') {
+      response.writeHead(200, { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(getRandomJokes(params.limit)) });
+      response.end();
+    } else {
+      response.writeHead(200, { 'Content-Type': 'application/json' });
+      response.write(getRandomJokes(params.limit));
+      response.end();
+    }
+  } 
 };
 
-const getRandomJokeResponse = (request, response, params, acceptedTypes) => {
+const getRandomJokeResponse = (request, response, params, acceptedTypes, httpMethod) => {
   const jokeNumber = Math.floor(Math.random() * jokes.length);
   const responseObj = {
     question: jokes[jokeNumber].q,
@@ -83,8 +93,16 @@ const getRandomJokeResponse = (request, response, params, acceptedTypes) => {
         <answer>${responseObj.answer}</question>
       </response>
     `;
-    response.writeHead(200, { 'Content-Type': 'text/xml' });
-    response.write(responseXML);
+    if (httpMethod === 'HEAD') {
+      response.writeHead(200, { 'Content-Type': 'text/xml', 'Content-Length': Buffer.byteLength(responseXML) });
+      response.end();
+    } else {
+      response.writeHead(200, { 'Content-Type': 'text/xml' });
+      response.write(responseXML);
+      response.end();
+    }
+  } else if (httpMethod === 'HEAD') {
+    response.writeHead(200, { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(responseObj) });
     response.end();
   } else {
     const joke = JSON.stringify(responseObj);

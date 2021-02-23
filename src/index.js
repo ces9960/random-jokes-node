@@ -47,7 +47,7 @@ const onRequest = (request, response) => {
   // const { limit } = params;
 
   if (urlStruct[pathname]) {
-    urlStruct[pathname](request, response, params, acceptedTypes);
+    urlStruct[pathname](request, response, params, acceptedTypes, request.method);
   } else {
     urlStruct.notFound(request, response);
   }
